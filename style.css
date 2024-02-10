@@ -1,0 +1,107 @@
+ * {
+ box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.video-container{
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+}
+.video{
+    width: 100vw;
+    height: 99.4vh;
+}
+.action-container{
+    position: absolute;
+
+   height: 15rem;
+   width: 6rem;
+    top: calc((100vh - 15rem)/2);
+    right: 5rem; 
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.action-container>*{
+      width: 100%;
+      height: 6rem;
+    background: #000;
+    border-radius: 50%;
+    border: 6px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.record-btn{
+      background-color: red;  
+      width: 4rem;
+      height: 4rem;
+    border-radius: 50%;
+    border: 1px solid black;
+
+    }
+.capture-btn{
+    background-color: white;  
+    width: 4rem;
+    height: 4rem;
+   border-radius: 50%;
+   border: 1px solid white;
+
+}
+
+.record-animation{
+    animation-name: recording;
+  animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+.capture-animation{
+    animation-name: capturing;
+    animation-iteration-count: 1;
+      animation-duration: 1s;
+}
+
+@keyframes recording {
+   0% {
+    transform:scale(0.8) ;
+   }
+   100% { 
+    transform:scale(1) ;
+
+   }
+  }
+
+@keyframes capturing {
+   0% {
+    transform:scale(0.8) ;
+   }
+   100% { 
+    transform:scale(1.1) ;
+
+   }
+
+  }
+
+  .timer{
+    color: white;
+    position: absolute;
+    top: 2rem;
+    right:45%;
+    font-size: xx-large;
+    display: none;
+   }
+
+   .display {
+    display: block;
+   }
+  
+
+
+
