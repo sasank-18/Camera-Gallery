@@ -1,6 +1,7 @@
 let videoCam = document.querySelector(".video");
 let recordingButton = document.querySelector(".record-action-container");
 let recordBtn = document.querySelector(".record-btn");
+let captureActionContainer= document.querySelector('.capture-action-container')
 let timer= document.querySelector('.timer')
 let chunks = [];
 let toggleRecord= false;
@@ -57,6 +58,24 @@ function Recording(MediaRecorder) {
   }
   
 }
+
+captureActionContainer.addEventListener('click',()=>{
+     const canvas= document.createElement('canvas');
+  // Get the 2D context of the canvas
+  const context = canvas.getContext('2d');
+
+  // Draw the current frame of the video onto the canvas
+  context.drawImage(videoCam, 0, 0, canvas.width, canvas.height);
+  
+  // You can now use the data URL or perform further actions with the captured image
+  const capturedImage = canvas.toDataURL('image/jpeg');
+  console.log('Captured Image:', capturedImage);
+
+  const a = document.createElement('a')
+  a.href= capturedImage
+  a.download= 'img.jpeg';
+  a.click();
+})
 
 let timmerID;
 let counter=1;
