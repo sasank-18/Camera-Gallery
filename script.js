@@ -1,10 +1,33 @@
+let videoContainer = document.querySelector(".video-container");
 let videoCam = document.querySelector(".video");
 let recordingButton = document.querySelector(".record-action-container");
 let recordBtn = document.querySelector(".record-btn");
-let captureActionContainer= document.querySelector('.capture-action-container')
-let timer= document.querySelector('.timer')
+let captureActionContainer = document.querySelector(
+  ".capture-action-container"
+);
+let filters = document.querySelectorAll(".filter");
+let timer = document.querySelector(".timer");
 let chunks = [];
-let toggleRecord= false;
+let toggleRecord = false;
+
+filters.forEach((filter) => {
+  filter.addEventListener("click", () => {
+
+    const presentDiv = document.querySelector('.filter-bg')
+    if(presentDiv){
+      console.log(presentDiv);
+      presentDiv.remove();
+    }
+    const div = document.createElement("div");
+    div.setAttribute("class", "filter-bg");
+    let value = filter.getAttribute('class').split(' ');
+    let className = value[1];
+    console.log(className);
+    div.setAttribute('class',`filter-bg ${className}`);
+    videoContainer.appendChild(div);
+  });
+});
+
 
 const accessVideo = async () => {
   // The navigator object provides information about the browser's environment and capabilities.
@@ -17,103 +40,93 @@ const accessVideo = async () => {
   videoCam.srcObject = vidStream;
 
   const mediaRecorder = new MediaRecorder(vidStream);
-  mediaRecorder.addEventListener('start', ()=>{
-    chunks=[];
-
-  })
-  mediaRecorder.addEventListener('stop', ()=>{
-    const blob = new Blob(chunks, { type: 'video/mp4' });
+  mediaRecorder.addEventListener("start", () => {
+    chunks = [];
+  });
+  mediaRecorder.addEventListener("stop", () => {
+    const blob = new Blob(chunks, { type: "video/mp4" });
     const videoURL = window.URL.createObjectURL(blob);
-    const a = document.createElement('a')
-    a.href= videoURL
-    a.download= 'video.mp4';
+    const a = document.createElement("a");
+    a.href = videoURL;
+    a.download = "video.mp4";
     a.click();
-  })
+  });
 
   mediaRecorder.ondataavailable = (e) => {
     chunks.push(e.data);
   };
 
   recordingButton.addEventListener("click", () => {
-    timer.classList.toggle('display')
+    timer.classList.toggle("display");
 
-   Recording(mediaRecorder);
+    Recording(mediaRecorder);
   });
-
 };
 accessVideo();
 
-
 function Recording(MediaRecorder) {
-  toggleRecord= !toggleRecord;
-  if(toggleRecord){
-  MediaRecorder.start();
-  recordBtn.classList.toggle('record-animation')
-  startTimmer();
-  }
-  else{
+  toggleRecord = !toggleRecord;
+  if (toggleRecord) {
+    MediaRecorder.start();
+    recordBtn.classList.toggle("record-animation");
+    startTimmer();
+  } else {
     MediaRecorder.stop();
-    recordBtn.classList.toggle('record-animation')
+    recordBtn.classList.toggle("record-animation");
     startTimmer();
   }
-  
 }
 
-captureActionContainer.addEventListener('click',()=>{
-     const canvas= document.createElement('canvas');
+captureActionContainer.addEventListener("click", () => {
+  const canvas = document.createElement("canvas");
   // Get the 2D context of the canvas
-  const context = canvas.getContext('2d');
+  const context = canvas.getContext("2d");
 
   // Draw the current frame of the video onto the canvas
   context.drawImage(videoCam, 0, 0, canvas.width, canvas.height);
-  
-  // You can now use the data URL or perform further actions with the captured image
-  const capturedImage = canvas.toDataURL('image/jpeg');
-  console.log('Captured Image:', capturedImage);
 
-  const a = document.createElement('a')
-  a.href= capturedImage
-  a.download= 'img.jpeg';
+  // You can now use the data URL or perform further actions with the captured image
+  const capturedImage = canvas.toDataURL("image/jpeg");
+  console.log("Captured Image:", capturedImage);
+
+  const a = document.createElement("a");
+  a.href = capturedImage;
+  a.download = "img.jpeg";
   a.click();
-})
+});
 
 let timmerID;
-let counter=1;
+let counter = 1;
 
-function startTimmer(){
-  if(toggleRecord){
-     //start timmer
-      function displayTimmer(){
+function startTimmer() {
+  if (toggleRecord) {
+    //start timmer
+    function displayTimmer() {
+      let totalSeconds = counter;
 
-        let totalSeconds= counter
+      let hour = parseInt(totalSeconds / 3600);
+      totalSeconds = totalSeconds % 3600;
 
-        let hour = parseInt(totalSeconds/3600);
-        totalSeconds= totalSeconds%3600;
-    
-        let min= parseInt(totalSeconds/60);
-        totalSeconds= totalSeconds%60
-    
-        let second = totalSeconds
-         
-        hour=  hour <10 ? `0${hour}` : `${hour}`
-        min=  min <10 ? `0${min}` : `${min}`
-        second=  second <10 ? `0${second}` : `${second}`
-        
-      
-        timer.innerText = `${hour}:${min}:${second}`
-    
+      let min = parseInt(totalSeconds / 60);
+      totalSeconds = totalSeconds % 60;
 
-        counter++;
-       }
-     
-   timmerID=  setInterval(displayTimmer,1000)
-  }
-  else{
+      let second = totalSeconds;
+
+      hour = hour < 10 ? `0${hour}` : `${hour}`;
+      min = min < 10 ? `0${min}` : `${min}`;
+      second = second < 10 ? `0${second}` : `${second}`;
+
+      timer.innerText = `${hour}:${min}:${second}`;
+
+      counter++;
+    }
+
+    timmerID = setInterval(displayTimmer, 1000);
+  } else {
     //stop timmer
-    
-    clearInterval(timmerID)
-    timer.innerText= '00:00:00';
-    counter=0;
-    
+
+    clearInterval(timmerID);
+    timer.innerText = "00:00:00";
+    counter = 0;
   }
 }
